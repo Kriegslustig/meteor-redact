@@ -3,8 +3,8 @@ Redact is sort of a CMS but not really. It's more of a opinionated editor. Redac
 
 ```JSON
 {
-  "_id": 'dabdb977-3ed1-4c43-b459-c9af0eb7b1b4',
-  "title": 'My Post',
+  "_id": "dabdb977-3ed1-4c43-b459-c9af0eb7b1b4",
+  "title": "My Post",
   "createdAt": "0",
   "lastPublishedAt": "1"
   "createdBy": "6cb0a8ae-ab49-46a1-acb8-7ef4c0aba894",
