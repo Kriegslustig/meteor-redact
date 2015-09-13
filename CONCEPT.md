@@ -34,18 +34,32 @@ Redact is sort of a CMS but not really. It's more of a opinionated editor. Redac
 }
 ```
 
-A document must have `_title`, `_draft`, `_createdAt`, `_createdBy` and `_lastPublishedAt` attributes. When the document doesn't have a `_public` attribute, it won't be displayed in the front-end. Extensions may extend this schema. `_draft` and `_public` are arrays of objects, called _elements_, which can have any number of attributes. Each must have `_type`, `_html` and `_id` attributes. They can also have a `_locked` attribute, which must be and id of a user. It is set when a user edits an _element_. The `_type` attribute is the name of a _module_ defined by an extension. The Redact core does not include any modules. The `_html` attribute is displayed to the editor/user. Other attributes are defined by _modules_. Attributes added by extension CANNOT have an underscore as a first character. This is to insure forwards compatibility
+A document must have `_title`, `_draft`, `_createdAt`, `_createdBy` and `_lastPublishedAt` attributes. When the document doesn't have a `_public` attribute, it won't be displayed in the front-end. Extensions may extend this schema. `_draft` and `_public` are arrays of objects, called _elements_, which can have any number of attributes. Each must have `_type`, `_html` and `_id` attributes. They can also have a `_locked` attribute, which must be and id of a user. It is set when a user edits an _element_. The `_type` attribute is the name of a _module_ defined by an extension. The Redact core does not include any modules. The `_html` attribute is displayed to the editor/user. Other attributes are defined by _modules_. Attributes added by extension CANNOT have an underscore as a first character. This is to insure forwards compatibility.
 
-## Structure
-```
-|
-- client
- |
- - lib
-- common
-- server
- |
- - lib
-```
+This whole schema is saved under `Redact.schemata.document`. It may be modified before you attach it to a collection. It is attached to a collection using `Redact.attachCollection`.
 
-## Licensing
+## Modules
+_Modules_ are the building blocks of Redact documents. They are added by extensions. Every _module_ has to have a template named the same as the module itself prefixed with `redactModule` so for example `redactModuleParagraph`. _Modules_ are added using `Redact.addModule`. It takes three parameters; `name`, `schema` and `options`. A call may look like this:
+
+```js
+Redact.addModule(
+  'Image',
+  {
+    link: {
+      type: 'String',
+      regEx: SimpleSchema.RegEx.Url,
+      optional: true
+    },
+    src: {
+      type: 'String'
+    },
+    alt: {
+      type: 'String'
+    }
+  },
+  {
+    label: 'A Simple Image',
+    icon: '/path/to/icon.svg'
+  }
+)
+```
