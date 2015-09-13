@@ -3,34 +3,34 @@ Redact is sort of a CMS but not really. It's more of a opinionated editor. Redac
 
 ```JSON
 {
-  "_id": 'x',
+  "_id": 'dabdb977-3ed1-4c43-b459-c9af0eb7b1b4',
   "title": 'My Post',
-  "content": [
+  "createdAt": "0",
+  "lastPublishedAt": "1"
+  "createdBy": "6cb0a8ae-ab49-46a1-acb8-7ef4c0aba894",
+  "public": [
     {
-      "type": "paragraph",
-      "public": {
-        "text": "Lorem ipsum",
-        "html": "<p>Lorem ipsum</p>"
-      },
-      "draft": {
-        "text": "Lorem Hipsum",
-        "html": "<p>Lorem Hipsum</p>"
-      },
+      "_id": "823abf44-c68c-4f27-8ed3-4ceabf596f65",
+      "_type": "paragraph",
+      "_html": "<p>Lorem ipsum</p>"
+    }
+  ],
+  "draft": [
+    {
+      "_id": "823abf44-c68c-4f27-8ed3-4ceabf596f65",
+      "_type": "paragraph",
+      "_html": "<p>Lorem Hipsum</p>"
     },
     {
-      "type": "image",
-      "draft": {
-        "alt": "Tree",
-        "src": "/tree.jpeg",
-        "link": "https://reddit.com",
-        "html": "<a href=\"https://reddit.com\"><img alt=\"Tree\" src=\"/tree.jpeg\"></a>"
-      }
-    }
+      "_id": "ccc14c7c-ba19-4459-a15a-aa921c85fdcd",
+      "_locked": "6cb0a8ae-ab49-46a1-acb8-7ef4c0aba894",
+      "_type": "image",
+      "_html": "<a href=\"https://reddit.com\"><img alt=\"Tree\" src=\"/tree.jpeg\"></a>"
+      "alt": "Tree",
+      "src": "/tree.jpeg",
+      "link": "https://reddit.com",
   ]
 }
 ```
 
-A document must have a `title`, and `content`. `content` an array of object which must can have three attributes. Each must have a `type`. It defines the schema for `draft` and `public`. If an object has no `public`, It isn't published.
-
-## TODO
-* Problem reaordering content in the draft stage
+A document must have `title`, `draft`, `createdAt`, `createdBy` and `las tPublishedAt` attributes. When the document doesn't have a `public` attribute, it won't be displayed in the front-end. Extensions may extend this schema. `draft` and `public` are arrays of objects, called _elements_, which can have any number of attributes. Each must have `_type`, `_html` and `_id` attributes. They can also have a `_locked` attribute, which must be and id of a user. It is set when a user edits an _element_. The `_type` attribute is the name of a _module_ defined by an extension. The Redact core does not include any modules. The `_html` attribute is displayed to the editor/user. Other attributes are defined by _modules_.
