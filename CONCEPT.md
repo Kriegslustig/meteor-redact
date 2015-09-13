@@ -4,18 +4,18 @@ Redact is sort of a CMS but not really. It's more of a opinionated editor. Redac
 ```JSON
 {
   "_id": "dabdb977-3ed1-4c43-b459-c9af0eb7b1b4",
-  "title": "My Post",
-  "createdAt": "0",
-  "lastPublishedAt": "1",
-  "createdBy": "6cb0a8ae-ab49-46a1-acb8-7ef4c0aba894",
-  "public": [
+  "_title": "My Post",
+  "_createdAt": "0",
+  "_lastPublishedAt": "1",
+  "_createdBy": "6cb0a8ae-ab49-46a1-acb8-7ef4c0aba894",
+  "_public": [
     {
       "_id": "823abf44-c68c-4f27-8ed3-4ceabf596f65",
       "_type": "paragraph",
       "_html": "<p>Lorem ipsum</p>"
     }
   ],
-  "draft": [
+  "_draft": [
     {
       "_id": "823abf44-c68c-4f27-8ed3-4ceabf596f65",
       "_type": "paragraph",
@@ -34,7 +34,7 @@ Redact is sort of a CMS but not really. It's more of a opinionated editor. Redac
 }
 ```
 
-A document must have `title`, `draft`, `createdAt`, `createdBy` and `las tPublishedAt` attributes. When the document doesn't have a `public` attribute, it won't be displayed in the front-end. Extensions may extend this schema. `draft` and `public` are arrays of objects, called _elements_, which can have any number of attributes. Each must have `_type`, `_html` and `_id` attributes. They can also have a `_locked` attribute, which must be and id of a user. It is set when a user edits an _element_. The `_type` attribute is the name of a _module_ defined by an extension. The Redact core does not include any modules. The `_html` attribute is displayed to the editor/user. Other attributes are defined by _modules_.
+A document must have `_title`, `_draft`, `_createdAt`, `_createdBy` and `_lastPublishedAt` attributes. When the document doesn't have a `_public` attribute, it won't be displayed in the front-end. Extensions may extend this schema. `_draft` and `_public` are arrays of objects, called _elements_, which can have any number of attributes. Each must have `_type`, `_html` and `_id` attributes. They can also have a `_locked` attribute, which must be and id of a user. It is set when a user edits an _element_. The `_type` attribute is the name of a _module_ defined by an extension. The Redact core does not include any modules. The `_html` attribute is displayed to the editor/user. Other attributes are defined by _modules_. Attributes added by extension CANNOT have an underscore as a first character. This is to insure forwards compatibility
 
 ## Structure
 ```
@@ -42,6 +42,7 @@ A document must have `title`, `draft`, `createdAt`, `createdBy` and `las tPublis
 - client
  |
  - lib
+- common
 - server
  |
  - lib
