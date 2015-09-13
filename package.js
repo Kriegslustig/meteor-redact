@@ -11,10 +11,14 @@ Package.onUse(function (api) {
   api.use([
     'templating',
     'mongo',
-    'aldeed:simple-schema@1.3.3'
+    'accounts-base',
+    'aldeed:simple-schema@1.3.3',
+    'aldeed:collection2@2.5.0',
   ])
   api.addFiles([
-    'lib/schema.js'
+    'lib/schema.js',
+    'lib/redact.js',
+    'lib/modules.js',
   ])
   api.addFiles([
     'server/redact.js'
@@ -22,5 +26,5 @@ Package.onUse(function (api) {
   api.addFiles([
     'client/redact.js'
   ], 'client')
-  api.export('Readact')
+  api.export('Redact')
 })
