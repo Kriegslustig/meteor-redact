@@ -1,4 +1,4 @@
-# Conecept
+# Concept
 Redact is sort of a CMS but not really. It's more of a opinionated editor. Redact has a fixed, but extendable database schema. It uses on MongoDB. Here's the basic structure of a Redact document:
 
 ```JSON
@@ -34,3 +34,16 @@ Redact is sort of a CMS but not really. It's more of a opinionated editor. Redac
 ```
 
 A document must have `title`, `draft`, `createdAt`, `createdBy` and `las tPublishedAt` attributes. When the document doesn't have a `public` attribute, it won't be displayed in the front-end. Extensions may extend this schema. `draft` and `public` are arrays of objects, called _elements_, which can have any number of attributes. Each must have `_type`, `_html` and `_id` attributes. They can also have a `_locked` attribute, which must be and id of a user. It is set when a user edits an _element_. The `_type` attribute is the name of a _module_ defined by an extension. The Redact core does not include any modules. The `_html` attribute is displayed to the editor/user. Other attributes are defined by _modules_.
+
+## Structure
+```
+|
+- client
+ |
+ - lib
+- server
+ |
+ - lib
+```
+
+## Licensing
