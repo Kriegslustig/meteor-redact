@@ -4,7 +4,10 @@ Redact is sort of a CMS but not really. It's more of a opinionated editor. Redac
 ```JSON
 {
   "_id": "dabdb977-3ed1-4c43-b459-c9af0eb7b1b4",
-  "_title": "My Post",
+  "_title": {
+    "_html": My Post",
+    "_locked": "ccc14c7c-ba19-4459-a15a-aa921c85fdcd"
+  },
   "_createdAt": "0",
   "_lastPublishedAt": "1",
   "_createdBy": "6cb0a8ae-ab49-46a1-acb8-7ef4c0aba894",
@@ -43,21 +46,22 @@ _Modules_ are the building blocks of Redact documents. They are added by extensi
 
 ```js
 Redact.addModule(
-  'Image',
+  'Image',,
   {
-    link: {
-      type: 'String',
-      regEx: SimpleSchema.RegEx.Url,
-      optional: true
+    schema: {
+      link: {
+        type: 'String',
+        regEx: SimpleSchema.RegEx.Url,
+        optional: true
+      },
+      src: {
+        type: 'String'
+      },
+      alt: {
+        type: 'String'
+      }
     },
-    src: {
-      type: 'String'
-    },
-    alt: {
-      type: 'String'
-    }
-  },
-  {
+    template: Template.image
     label: 'A Simple Image',
     icon: '/path/to/icon.svg'
   }
