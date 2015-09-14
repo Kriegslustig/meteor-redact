@@ -16,6 +16,7 @@ Package.onUse(function (api) {
     'aldeed:collection2@2.5.0',
   ])
   api.addFiles([
+    'lib/utils.js',
     'lib/schema.js',
     'lib/redact.js',
     'lib/modules.js',

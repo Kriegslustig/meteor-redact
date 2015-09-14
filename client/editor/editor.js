@@ -1,31 +1,33 @@
+var currentDoc
+
 Template.redactEditor.helpers({
   getDocument: function () {
-    return typeof this.doc === 'string'
+    currentDoc = typeof this.doc === 'string'
       ? Redact.collection.findOne(this.doc)
       : this.doc
+    return currentDoc
   },
   getTemplate: function () {
     return Redact.modules[this.doc._type].template
+  },
+  shouldBeContenteditable: function (field) {
+    return (field._lock && field._lock._user === Redact.getUserId()) || !field._lock
   }
 })
 
 Template.redactEditor.onRendered(function () {
-  var doc = typeof this.data.doc === 'string'
-    ? Redact.collection.findOne(this.data.doc)
-    : this.data.doc
-  this.data.doc = doc
-  this.$('.redactEditor__title')[0].innerHTML = doc._title
+  this.$('.redactEditor__title')[0].innerHTML = currentDoc._title._html
 })
 
 Template.redactEditor.events({
-  'keyup [contenteditable=true]': contentGetter(function (id, field, value) {
-    Redact.collection.update(id, { $set: _.object([field], [value]) })
-  })
+  'focus [contenteditable=true]': contentGetter(Redact.lockField),
+  'keyup [contenteditable=true]': contentGetter(Redact.updateFieldValue)
 })
 
 function contentGetter (cb) {
   return function (e) {
-    if(!e.currentTarget.getAttribute('data-field')) throw 'All contenteditables need a data-field attribute.'
-    cb(this.doc._id, e.currentTarget.getAttribute('data-field'), e.currentTarget.innerHTML)
+    if(!e.currentTarget.getAttribute('data-field'))
+      throw 'All contenteditables need a data-field attribute.'
+    cb(currentDoc._id, e.currentTarget.getAttribute('data-field'), e.currentTarget.innerHTML)
   }
 }
