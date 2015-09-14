@@ -24,7 +24,9 @@ Package.onUse(function (api) {
     'server/redact.js'
   ], 'server')
   api.addFiles([
-    'client/redact.js'
+    'client/redact.js',
+    'client/editor/editor.html',
+    'client/editor/editor.js'
   ], 'client')
   api.export('Redact')
 })

@@ -1,0 +1,18 @@
+<template name="redactEditor">
+  <section class="redactEditor">
+    <section class="redactEditor__content">
+      <h1 class="redactEditor__title" data-field="_title" contenteditable="true"></h1>
+      {{ #each _draft }}
+        {{ > getTemplate }}
+      {{ /each }}
+    </section>
+    <section class="redactEditor__menu">
+      {{ #each module }}
+        <article class="redactEditor__module">
+          <object src="{{ icon }}"></object>
+          <h3 class="redactEditor__moduleLabel">{{ label }}</h3>
+        </article>
+      {{ /each }}
+    </section>
+  </section>
+</template>
