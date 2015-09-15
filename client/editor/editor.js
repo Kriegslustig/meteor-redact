@@ -21,13 +21,14 @@ Template.redactEditor.onRendered(function () {
 
 Template.redactEditor.events({
   'focus [contenteditable=true]': contentGetter(Redact.lockField),
-  'keyup [contenteditable=true]': contentGetter(Redact.updateFieldValue)
+  'keyup [contenteditable=true]': contentGetter(_.throttle(Redact.updateFieldValue, 5000)),
+  'blur [contenteditable=true]': contentGetter(Redact.updateFieldValue)
 })
 
 function contentGetter (cb) {
   return function (e) {
     if(!e.currentTarget.getAttribute('data-field'))
       throw 'All contenteditables need a data-field attribute.'
-    cb(currentDoc._id, e.currentTarget.getAttribute('data-field'), e.currentTarget.innerHTML)
+    cb(currentDoc._id, e.currentTarget.getAttribute('data-field'), e.currentTarget.innerHTML, e.currentTarget)
   }
 }
