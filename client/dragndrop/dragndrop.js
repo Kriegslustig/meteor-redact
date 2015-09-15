@@ -7,13 +7,13 @@ Redact.dragndrop = {
   starter: function (cb) {
     var self = this
     return function (e) {
-      self.node = $(e.currentTarget).clone()[0]
+      self.node = $(e.currentTarget).clone(1)[0]
       self.follower = self.follow.bind(self)
       self.node.className += ' redactDragging'
       document.body.appendChild(self.node)
       self.follower(e)
       window.addEventListener('mousemove', self.follower)
-      window.addEventListener('mouseup', self.stopper(cb))
+      window.addEventListener('mouseup', self.stopper(cb.bind(self)))
     }
   },
   stopper: function (cb) {

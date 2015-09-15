@@ -3,13 +3,13 @@
     <section class="redactEditor">
       <section class="redactEditor__content">
         <h1 class="redactEditor__title" data-field="_title" contenteditable="{{ #if shouldBeContenteditable _title }}true{{ else }}false{{ /if }}"></h1>
-        {{ #each _draft }}
+        {{ #each getElements }}
           {{ > getTemplate }}
         {{ /each }}
       </section>
       <aside class="redactEditor__menu">
-        {{ #each module }}
-          <article class="redactEditor__module">
+        {{ #each modules }}
+          <article class="redactEditor__module" data-type="{{ name }}">
             <object src="{{ icon }}"></object>
             <h3 class="redactEditor__moduleLabel">{{ label }}</h3>
           </article>
