@@ -46,7 +46,8 @@ _Modules_ are the building blocks of Redact documents. They are added by extensi
 
 ```js
 Redact.addModule(
-  'Image',,
+  'Image',
+  Template.redactImage,
   {
     schema: {
       link: {
@@ -61,7 +62,6 @@ Redact.addModule(
         type: 'String'
       }
     },
-    template: Template.image
     label: 'A Simple Image',
     icon: '/path/to/icon.svg'
   }
