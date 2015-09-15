@@ -40,7 +40,8 @@ Template.redactEditor.onRendered(function () {
 Template.redactEditor.events({
   'focus [contenteditable=true]': contentGetter(Redact.lockField),
   'keyup [contenteditable=true]': contentGetter(_.throttle(Redact.updateFieldValue, 5000)),
-  'blur [contenteditable=true]': contentGetter(Redact.updateFieldValue)
+  'blur [contenteditable=true]': contentGetter(Redact.updateFieldValue),
+  'mousedown .redactEditor__module': Redact.dragndrop.starter()
 })
 
 function contentGetter (cb) {

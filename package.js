@@ -27,8 +27,11 @@ Package.onUse(function (api) {
   ], 'server')
   api.addFiles([
     'client/redact.js',
+    'client/dragndrop/dragndrop.css',
+    'client/dragndrop/dragndrop.js',
     'client/editor/editor.html',
-    'client/editor/editor.js'
+    'client/editor/editor.css',
+    'client/editor/editor.js',
   ], 'client')
   api.export('Redact')
 })
