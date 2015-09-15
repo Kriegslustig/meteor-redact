@@ -16,7 +16,19 @@ Template.redactEditor.helpers({
 })
 
 Template.redactEditor.onRendered(function () {
-  this.$('.redactEditor__title')[0].innerHTML = currentDoc._title._html
+  var self = this
+  self.$('.redactEditor__title')[0].innerHTML = currentDoc._title._html
+  self.$('[contenteditable=true]').each(function (i, elem) {
+    var field = elem.getAttribute('data-field')
+    Tracker.autorun(function () {
+      var lock = Redact.collection.findOne(currentDoc._id)[field + '.lock']
+      if((lock && lock._user === Redact.getUserId()) || !lock) {
+        elem.contenteditable = 'true'
+      } else {
+        elem.contenteditable = 'false'
+      }
+    })
+  })
 })
 
 Template.redactEditor.events({
