@@ -7,14 +7,14 @@
           {{ > getTemplate }}
         {{ /each }}
       </section>
-      <section class="redactEditor__menu">
+      <aside class="redactEditor__menu">
         {{ #each module }}
           <article class="redactEditor__module">
             <object src="{{ icon }}"></object>
             <h3 class="redactEditor__moduleLabel">{{ label }}</h3>
           </article>
         {{ /each }}
-      </section>
+      </aside>
     </section>
   {{ /with }}
 </template>

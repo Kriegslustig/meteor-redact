@@ -12,6 +12,12 @@ Template.redactEditor.helpers({
   },
   shouldBeContenteditable: function (field) {
     return (field._lock && field._lock._user === Redact.getUserId()) || !field._lock
+  },
+  module: function () {
+    return _.map(Redact.modules, function (elem, key) {
+      elem.name = key
+      return elem
+    })
   }
 })
 
