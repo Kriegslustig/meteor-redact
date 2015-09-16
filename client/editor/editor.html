@@ -2,7 +2,7 @@
   {{ #with getDocument }}
     <section class="redactEditor">
       <section class="redactEditor__content">
-        <h1 class="redactEditor__title" data-field="_title" contenteditable="{{ #if shouldBeContenteditable _title }}true{{ else }}false{{ /if }}"></h1>
+        <h1 class="redactEditor__title" data-field="_title" contenteditable="true"></h1>
         {{ #each getElements }}
           {{ > getTemplate }}
         {{ /each }}

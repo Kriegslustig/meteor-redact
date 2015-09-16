@@ -1,4 +1,5 @@
 var currentDoc
+var templateInstance
 
 Template.redactEditor.helpers({
   getDocument: function () {
@@ -8,6 +9,7 @@ Template.redactEditor.helpers({
     return currentDoc
   },
   getTemplate: function () {
+    if(!this._type) throw new Meteor.Error('invalidElement', '_type of element is not defined: ' + EJSON.stringify(this))
     return Redact.modules[this._type].template
   },
   shouldBeContenteditable: function (field) {
@@ -24,30 +26,17 @@ Template.redactEditor.helpers({
         fieldId: ['_draft', index].join('.')
       })
     })
+  },
+  getField: function (key) {
+    return Redact.objValMongoSelector(Redact.collection.findOne(currentDoc._id, {reactive: false}), key)
   }
 })
 
-Template.redactEditor.onRendered(function () {
-  var self = this
-  self.$('[data-field]').each(function (i, elem) {
-    elem.innerHTML = Redact.objValMongoSelector(currentDoc, elem.getAttribute('data-field'))._html
-  })
-  self.$('[contenteditable=true]').each(function (i, elem) {
-    var field = elem.getAttribute('data-field')
-    Tracker.autorun(function () {
-      var lock = Redact.collection.findOne(currentDoc._id)[field + '.lock']
-      if((lock && lock._user === Redact.getUserId()) || !lock) {
-        elem.contenteditable = 'true'
-      } else {
-        elem.contenteditable = 'false'
-      }
-    })
-  })
-})
+Template.redactEditor.onRendered(renderPartlyReactiveContent)
 
 Template.redactEditor.events({
   'focus [contenteditable=true]': contentGetter(Redact.lockField),
-  'keyup [contenteditable=true]': contentGetter(_.throttle(Redact.updateFieldValue, 5000)),
+  'keyup [contenteditable=true]': contentGetter(_.throttle(Redact.updateFieldValue, 1000)),
   'blur [contenteditable=true]': contentGetter(Redact.updateFieldValue),
   'mousedown .redactEditor__module': Redact.dragndrop.starter(function (e) {
     var module = this.node.getAttribute('data-type')
@@ -58,7 +47,8 @@ Template.redactEditor.events({
       _.extend({
         _html: '',
         _type: module
-      }, (Redact.modules[module].defaults || {}))
+      }, (Redact.modules[module].defaults || {})),
+      renderPartlyReactiveContent
     )
   })
 })
@@ -69,4 +59,22 @@ function contentGetter (cb) {
       throw 'All contenteditables need a data-field attribute.'
     cb(currentDoc._id, e.currentTarget.getAttribute('data-field'), e.currentTarget.innerHTML, e.currentTarget)
   }
+}
+
+function renderPartlyReactiveContent () {
+  templateInstance = templateInstance || this
+  templateInstance.$('[data-field]').each(function (i, elem) {
+    elem.innerHTML = Redact.objValMongoSelector(currentDoc, elem.getAttribute('data-field'))._html
+  })
+  templateInstance.$('[contenteditable=true]').each(function (i, elem) {
+    var field = elem.getAttribute('data-field')
+    Tracker.autorun(function () {
+      var lock = Redact.collection.findOne(currentDoc._id)[field + '.lock']
+      if((lock && lock._user === Redact.getUserId()) || !lock) {
+        elem.contenteditable = 'true'
+      } else {
+        elem.contenteditable = 'false'
+      }
+    })
+  })
 }

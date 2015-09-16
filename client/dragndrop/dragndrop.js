@@ -13,14 +13,16 @@ Redact.dragndrop = {
       document.body.appendChild(self.node)
       self.follower(e)
       window.addEventListener('mousemove', self.follower)
-      window.addEventListener('mouseup', self.stopper(cb.bind(self)))
+      self.stop = self.stopper(cb.bind(self))
+      window.addEventListener('mouseup', self.stop)
     }
   },
   stopper: function (cb) {
     var self = this
     return function (e) {
       document.body.removeChild(self.node)
-      if(cb) cb(e.clientX, e.clientY)
+      if(cb) cb(e)
+      window.removeEventListener('mouseup', self.stop)
     }
   }
 }
