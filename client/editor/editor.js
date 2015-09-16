@@ -36,8 +36,8 @@ Template.redactEditor.onRendered(renderPartlyReactiveContent)
 
 Template.redactEditor.events({
   'focus [contenteditable=true]': contentGetter(Redact.lockField),
-  'keyup [contenteditable=true]': contentGetter(_.throttle(Redact.updateFieldValue, 1000)),
-  'blur [contenteditable=true]': contentGetter(Redact.updateFieldValue),
+  'keyup [contenteditable=true]': keyFilter(contentGetter(_.throttle(Redact.updateFieldValue, 1000))),
+  'blur [contenteditable=true]': contentGetter(Redact.updateAndUnlockField),
   'mousedown .redactEditor__module': Redact.dragndrop.starter(function (e) {
     var module = this.node.getAttribute('data-type')
     Redact.addElement(
@@ -57,7 +57,13 @@ function contentGetter (cb) {
   return function (e) {
     if(!e.currentTarget.getAttribute('data-field'))
       throw 'All contenteditables need a data-field attribute.'
-    cb(currentDoc._id, e.currentTarget.getAttribute('data-field'), e.currentTarget.innerHTML, e.currentTarget)
+    cb(currentDoc._id, e.currentTarget.getAttribute('data-field'), e.currentTarget.innerHTML, e.currentTarget, e)
+  }
+}
+
+function keyFilter (cb) {
+  return function (e) {
+    if(e.char) cb(e)
   }
 }
 
@@ -69,11 +75,11 @@ function renderPartlyReactiveContent () {
   templateInstance.$('[contenteditable=true]').each(function (i, elem) {
     var field = elem.getAttribute('data-field')
     Tracker.autorun(function () {
-      var lock = Redact.collection.findOne(currentDoc._id)[field + '.lock']
+      var lock = Redact.objValMongoSelector(Redact.collection.findOne(currentDoc._id), field + '._lock')
       if((lock && lock._user === Redact.getUserId()) || !lock) {
-        elem.contenteditable = 'true'
+        elem.contentEditable = 'true'
       } else {
-        elem.contenteditable = 'false'
+        elem.contentEditable = 'false'
       }
     })
   })

@@ -28,3 +28,15 @@
   margin: 0;
   padding: 0;
 }
+
+[contenteditable] {
+  transition: background-color .2s;
+}
+
+[contenteditable=false] {
+  background-color: hsla(80, 80%, 0%, 0.1);
+}
+
+[contenteditable=true]:focus {
+  background-color: hsla(80, 80%, 80%, 0.2);
+}
