@@ -49,7 +49,8 @@ Template.redactEditor.events({
         _.extend({
           _html: '',
           _type: module
-        }, (Redact.modules[module].defaults || {})),
+        },
+        (Redact.modules[module].defaults || {})),
         renderPartlyReactiveContent
       )
     },
@@ -71,12 +72,14 @@ function keyFilter (cb) {
 }
 
 function renderPartlyReactiveContent () {
+  currentDoc = Redact.collection.findOne(currentDoc._id)
   templateInstance = templateInstance || this
   templateInstance.$('[data-field]').each(function (i, elem) {
-    elem.innerHTML = Redact.deepObjKey(currentDoc, elem.getAttribute('data-field'))._html
+    elem.innerHTML = Redact.findByAttr(currentDoc['_draft'], '_id', elem.id)._html
   })
   templateInstance.$('[contenteditable=true]').each(function (i, elem) {
     var field = elem.getAttribute('data-field')
+    // TODO: Fix this memory leak (autorun is never stopped, but created multiple times)
     Tracker.autorun(function () {
       var lock = Redact.deepObjKey(Redact.collection.findOne(currentDoc._id), field + '._lock')
       if((lock && lock._user === Redact.getUserId()) || !lock) {
