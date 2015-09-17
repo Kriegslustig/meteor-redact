@@ -28,7 +28,7 @@ Template.redactEditor.helpers({
     })
   },
   getField: function (key) {
-    return Redact.objValMongoSelector(Redact.collection.findOne(currentDoc._id, {reactive: false}), key)
+    return Redact.deepObjKey(Redact.collection.findOne(currentDoc._id, {reactive: false}), key)
   }
 })
 
@@ -38,18 +38,21 @@ Template.redactEditor.events({
   'focus [contenteditable=true]': contentGetter(Redact.lockField),
   'keyup [contenteditable=true]': keyFilter(contentGetter(_.throttle(Redact.updateFieldValue, 1000))),
   'blur [contenteditable=true]': contentGetter(Redact.updateAndUnlockField),
-  'mousedown .redactEditor__module': Redact.dragndrop.starter(function (e) {
-    var module = this.node.getAttribute('data-type')
-    Redact.addElement(
-      currentDoc._id,
-      '_draft',
-      0,
-      _.extend({
-        _html: '',
-        _type: module
-      }, (Redact.modules[module].defaults || {})),
-      renderPartlyReactiveContent
-    )
+  'mousedown .redactEditor__module': Redact.dragndrop.creator({
+    onDrag: function (e) {},
+    onDrop: function (e) {
+      var module = this.node.getAttribute('data-type')
+      Redact.addElement(
+        currentDoc._id,
+        '_draft',
+        0,
+        _.extend({
+          _html: '',
+          _type: module
+        }, (Redact.modules[module].defaults || {})),
+        renderPartlyReactiveContent
+      )
+    },
   })
 })
 
@@ -70,12 +73,12 @@ function keyFilter (cb) {
 function renderPartlyReactiveContent () {
   templateInstance = templateInstance || this
   templateInstance.$('[data-field]').each(function (i, elem) {
-    elem.innerHTML = Redact.objValMongoSelector(currentDoc, elem.getAttribute('data-field'))._html
+    elem.innerHTML = Redact.deepObjKey(currentDoc, elem.getAttribute('data-field'))._html
   })
   templateInstance.$('[contenteditable=true]').each(function (i, elem) {
     var field = elem.getAttribute('data-field')
     Tracker.autorun(function () {
-      var lock = Redact.objValMongoSelector(Redact.collection.findOne(currentDoc._id), field + '._lock')
+      var lock = Redact.deepObjKey(Redact.collection.findOne(currentDoc._id), field + '._lock')
       if((lock && lock._user === Redact.getUserId()) || !lock) {
         elem.contentEditable = 'true'
       } else {
