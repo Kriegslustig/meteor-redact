@@ -4,17 +4,14 @@ Redact is sort of a CMS but not really. It's more of a opinionated editor. Redac
 ```JSON
 {
   "_id": "dabdb977-3ed1-4c43-b459-c9af0eb7b1b4",
-  "_title": {
-    "_html": "My Post",
-    "_locked": {
-      "_time": "ccc14c7c-ba19-4459-a15a-aa921c85fdcd",
-      "_user": "6cb0a8ae-ab49-46a1-acb8-7ef4c0aba894"
-    }
-  },
   "_createdAt": "0",
   "_lastPublishedAt": "1",
   "_createdBy": "6cb0a8ae-ab49-46a1-acb8-7ef4c0aba894",
   "_public": [
+    {
+      "_type": "title",
+      "_html": "My Post"
+    },
     {
       "_id": "823abf44-c68c-4f27-8ed3-4ceabf596f65",
       "_type": "paragraph",
@@ -22,6 +19,14 @@ Redact is sort of a CMS but not really. It's more of a opinionated editor. Redac
     }
   ],
   "_draft": [
+    {
+      "_type": "title"
+      "_html": "My Post",
+      "_locked": {
+        "_time": "ccc14c7c-ba19-4459-a15a-aa921c85fdcd",
+        "_user": "6cb0a8ae-ab49-46a1-acb8-7ef4c0aba894"
+      }
+    },
     {
       "_id": "823abf44-c68c-4f27-8ed3-4ceabf596f65",
       "_type": "paragraph",
