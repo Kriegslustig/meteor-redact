@@ -18,6 +18,7 @@ Package.onUse(function (api) {
   ])
   api.addFiles([
     'lib/utils.js',
+    'lib/error.js',
     'lib/schema.js',
     'lib/redact.js',
     'lib/modules.js',

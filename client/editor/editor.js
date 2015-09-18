@@ -1,5 +1,6 @@
 var currentDoc
 var templateInstance
+var container = '_draft'
 
 Template.redactEditor.helpers({
   getDocument: function () {
@@ -21,9 +22,9 @@ Template.redactEditor.helpers({
     })
   },
   getElements: function () {
-    return this._draft.map(function (elem, index) {
+    return _.map(this[container], function (elem, index) {
       return _.extend(elem, {
-        fieldId: ['_draft', index].join('.')
+        field: container
       })
     })
   },
@@ -61,7 +62,14 @@ function contentGetter (cb) {
   return function (e) {
     if(!e.currentTarget.getAttribute('data-field'))
       throw 'All contenteditables need a data-field attribute.'
-    cb(currentDoc._id, e.currentTarget.getAttribute('data-field'), e.currentTarget.innerHTML, e.currentTarget, e)
+    cb(
+      currentDoc._id,
+      container,
+      e.currentTarget.id,
+      e.currentTarget.innerHTML,
+      e.currentTarget,
+      e
+    )
   }
 }
 
@@ -75,7 +83,8 @@ function renderPartlyReactiveContent () {
   currentDoc = Redact.collection.findOne(currentDoc._id)
   templateInstance = templateInstance || this
   templateInstance.$('[data-field]').each(function (i, elem) {
-    elem.innerHTML = Redact.findByAttr('_id', elem.id, currentDoc['_draft'])._html
+    if(!elem.id) return
+    elem.innerHTML = Redact.findByAttr('_id', elem.id, currentDoc[container], true)._html
   })
   templateInstance.$('[contenteditable=true]').each(function (i, elem) {
     var field = elem.getAttribute('data-field')
