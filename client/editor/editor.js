@@ -1,11 +1,12 @@
 var currentDoc
 var templateInstance
 var container = '_draft'
+var collection
 
 Template.redactEditor.helpers({
   getDocument: function () {
     currentDoc = typeof this.doc === 'string'
-      ? Redact.collection.findOne(this.doc)
+      ? collection.findOne(this.doc)
       : this.doc
     return currentDoc
   },
@@ -29,16 +30,40 @@ Template.redactEditor.helpers({
     })
   },
   getField: function (key) {
-    return Redact.deepObjKey(key, Redact.collection.findOne(currentDoc._id, {reactive: false}))
+    return Redact.deepObjKey(key, collection.findOne(currentDoc._id, {reactive: false}))
   }
+})
+
+Template.redactEditor.onCreated(function () {
+  if(!this.data.collection) throw Redact.error('missingCollectionInTemplate')
+  collection = this.data.collection
 })
 
 Template.redactEditor.onRendered(renderPartlyReactiveContent)
 
 Template.redactEditor.events({
-  'focus [contenteditable=true]': contentGetter(Redact.lockField),
-  'keyup [contenteditable=true]': keyFilter(contentGetter(_.throttle(Redact.updateFieldValue, 1000))),
-  'blur [contenteditable=true]': contentGetter(Redact.updateAndUnlockField),
+  'focus [contenteditable=true]': function lockElementOnFocus (e) {
+    Redact.lockElement(collection, getElement(e))
+  },
+
+  'keyup [contenteditable=true]': keyFilter(function updateElementOnKeyup (e) {
+    Redact.updateFieldValue(
+      collection,
+      getElement(e),
+      '_html',
+      e.currentTarget.innerHTML
+    )
+  }),
+
+  'blur [contenteditable=true]': function (e) {
+    Redact.updateAndUnlockElement(
+      collection,
+      getElement(e),
+      '_html',
+      e.currentTarget.innerHTML
+    )
+  },
+
   'mousedown .redactEditor__module': Redact.dragndrop.creator({
     onDrag: function (e) {},
     onDrop: function (e) {
@@ -58,19 +83,14 @@ Template.redactEditor.events({
   })
 })
 
-function contentGetter (cb) {
-  return function (e) {
-    if(!e.currentTarget.getAttribute('data-field'))
-      throw 'All contenteditables need a data-field attribute.'
-    cb(
-      currentDoc._id,
-      container,
-      e.currentTarget.id,
-      e.currentTarget.innerHTML,
-      e.currentTarget,
-      e
-    )
-  }
+function getElement (e) {
+  if(!e.currentTarget.getAttribute('data-field'))
+    throw 'All contenteditables need a data-field attribute.'
+  return Redact.normalizeElement(collection, {
+    document: currentDoc._id,
+    container: container,
+    id: e.currentTarget.id,
+  })
 }
 
 function keyFilter (cb) {
@@ -79,8 +99,17 @@ function keyFilter (cb) {
   }
 }
 
+function getUpdateParams (params) {
+  return [
+    params[0],
+    params[1],
+    '_html',
+    params[2].innerHTML
+  ]
+}
+
 function renderPartlyReactiveContent () {
-  currentDoc = Redact.collection.findOne(currentDoc._id)
+  currentDoc = collection.findOne(currentDoc._id)
   templateInstance = templateInstance || this
   templateInstance.$('[data-field]').each(function (i, elem) {
     if(!elem.id) return
@@ -90,7 +119,7 @@ function renderPartlyReactiveContent () {
     var field = elem.getAttribute('data-field')
     // TODO: Fix this memory leak (autorun is never stopped, but created multiple times)
     Tracker.autorun(function () {
-      var lock = Redact.deepObjKey(field + '._lock', Redact.collection.findOne(currentDoc._id))
+      var lock = Redact.deepObjKey(field + '._lock', collection.findOne(currentDoc._id))
       if((lock && lock._user === Redact.getUserId()) || !lock) {
         elem.contentEditable = 'true'
       } else {
