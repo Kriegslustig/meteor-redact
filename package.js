@@ -1,7 +1,7 @@
 Package.describe({
-  name: 'kriegslustig:redact',
+  name: 'redact:core',
   version: '0.0.0',
-  repository: 'git@github.com:Kriegslustig/meteor-redact.git',
+  repository: 'git@github.com:Kriegslustig/redact-core.git',
   documentation: 'README.md',
   description: 'A reactive cotent editor built using contenteditable and with extendability in mind.'
 })
