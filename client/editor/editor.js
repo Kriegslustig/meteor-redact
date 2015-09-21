@@ -18,16 +18,10 @@ Template.redactEditor.helpers({
     return (field._lock && field._lock._user === Redact.getUserId()) || !field._lock
   },
   modules: function () {
-    return _.map(Redact.modules, function (elem, key) {
-      return _.extend(elem, { name: key })
-    })
+    return _.map( Redact.modules, (elem, key) => _.extend(elem, { name: key }) )
   },
   getElements: function () {
-    return _.map(this[container], function (elem, index) {
-      return _.extend(elem, {
-        field: container
-      })
-    })
+    return _.map( this[container], (elem, index) => _.extend(elem, { field: container }) )
   },
   getField: function (key) {
     return Redact.deepObjKey(key, collection.findOne(currentDoc._id, {reactive: false}))
@@ -93,8 +87,8 @@ function getElement (e) {
   if(!e.currentTarget.getAttribute('data-field'))
     throw 'All contenteditables need a data-field attribute.'
   return Redact.normalizeElement(collection, {
+    container,
     document: currentDoc._id,
-    container: container,
     id: e.currentTarget.id,
   })
 }
@@ -117,15 +111,15 @@ function getUpdateParams (params) {
 function renderPartlyReactiveContent () {
   currentDoc = collection.findOne(currentDoc._id)
   templateInstance = templateInstance || this
-  templateInstance.$('[data-field]').each(function (i, elem) {
+  templateInstance.$('[data-field]').each((i, elem) => {
     if(!elem.id) return
     elem.innerHTML = Redact.findByAttr('_id', elem.id, currentDoc[container], true)._html
   })
-  templateInstance.$('[contenteditable=true]').each(function (i, elem) {
-    var field = elem.getAttribute('data-field')
+  templateInstance.$('[contenteditable=true]').each((i, elem) => {
+    let field = elem.getAttribute('data-field')
     // TODO: Fix this memory leak (autorun is never stopped, but created multiple times)
-    Tracker.autorun(function () {
-      var lock = Redact.deepObjKey(field + '._lock', collection.findOne(currentDoc._id))
+    Tracker.autorun(() => {
+      let lock = Redact.deepObjKey(field + '._lock', collection.findOne(currentDoc._id))
       if((lock && lock._user === Redact.getUserId()) || !lock) {
         elem.contentEditable = 'true'
       } else {

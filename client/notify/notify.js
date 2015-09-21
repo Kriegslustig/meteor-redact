@@ -1,11 +1,9 @@
-Redact.notify = function RedactNotify (message, type, timeout) {
-  timeout = timeout || 2000
-  type = type || 'error'
+Redact.notify = function RedactNotify (message, type = 'error', timeout = 2000) {
   Blaze.renderWithData(
     Template.notify,
     {
-      type: type,
-      text: message
+      type,
+      message
     },
     document.body
   )
