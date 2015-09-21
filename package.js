@@ -26,10 +26,6 @@ Package.onUse(function (api) {
     'lib/modules.js',
   ])
   api.addFiles([
-    'server/redact.js'
-  ], 'server')
-  api.addFiles([
-    'client/redact.js',
     'client/dragndrop/dragndrop.css',
     'client/dragndrop/dragndrop.js',
     'client/editor/editor.html',
