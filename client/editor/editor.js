@@ -44,6 +44,12 @@ Template.redactEditor.onRendered(renderPartlyReactiveContent)
 Template.redactEditor.events({
   'focus [contenteditable=true]': function lockElementOnFocus (e) {
     Redact.lockElement(collection, getElement(e))
+      .then( function () {
+        debugger;
+      })
+      .catch(function (err) {
+        Redact.notify(err.message)
+      })
   },
 
   'keyup [contenteditable=true]': keyFilter(function updateElementOnKeyup (e) {

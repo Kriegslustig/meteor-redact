@@ -15,6 +15,7 @@ Package.onUse(function (api) {
     'accounts-base',
     'promise',
     'ejson',
+    'htmljs',
     'aldeed:simple-schema@1.3.3',
     'aldeed:collection2@2.5.0',
   ])
@@ -31,6 +32,9 @@ Package.onUse(function (api) {
     'client/editor/editor.html',
     'client/editor/editor.css',
     'client/editor/editor.js',
+    'client/notify/notify.html',
+    'client/notify/notify.css',
+    'client/notify/notify.js',
   ], 'client')
   api.export('Redact')
 })
