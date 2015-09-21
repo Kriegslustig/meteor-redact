@@ -16,13 +16,13 @@ Redact.notifyDoOnAll = function RedactNotifyDoOnAll (cb) {
 }
 
 Redact.notifyHideAll = function RedactNotifyHideAll () {
-  Redact.notifyDoOnAll(function (elem) {
+  Redact.notifyDoOnAll((elem) => {
     elem.className += ' notify--hidden'
   })
 }
 
 Redact.notifyRemoveAll = function RedactNotifyRemoveAll () {
-  Redact.notifyDoOnAll(function (elem) {
+  Redact.notifyDoOnAll((elem) => {
     elem.parentNode.removeChild(elem)
   })
 }

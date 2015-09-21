@@ -1,7 +1,7 @@
-var currentDoc
-var templateInstance
-var container = '_draft'
-var collection
+let currentDoc
+let templateInstance
+let container = '_draft'
+let collection
 
 Template.redactEditor.helpers({
   getDocument: function () {
@@ -67,7 +67,7 @@ Template.redactEditor.events({
   'mousedown .redactEditor__module': Redact.dragndrop.creator({
     onDrag: function (e) {},
     onDrop: function (e) {
-      var module = this.node.getAttribute('data-type')
+      let module = this.node.getAttribute('data-type')
       Redact.addElement(
         currentDoc._id,
         '_draft',
@@ -94,7 +94,7 @@ function getElement (e) {
 }
 
 function keyFilter (cb) {
-  return function (e) {
+  return (e) => {
     if(e.char) cb(e)
   }
 }
