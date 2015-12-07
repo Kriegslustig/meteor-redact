@@ -11,7 +11,7 @@ Template.redactEditor.helpers({
     return currentDoc
   },
   getTemplate: function () {
-    if(!this._type) throw new Meteor.Error('invalidElement', '_type of element is not defined: ' + EJSON.stringify(this))
+    if(!this._type) throw new Meteor.Error('invalidElement', `_type of element is not defined: ${EJSON.stringify(this)}`)
     return Redact.modules[this._type].template
   },
   shouldBeContenteditable: function (field) {
@@ -69,16 +69,21 @@ Template.redactEditor.events({
     onDrop: function (e) {
       let module = this.node.getAttribute('data-type')
       Redact.addElement(
-        currentDoc._id,
-        '_draft',
-        0,
-        _.extend({
-          _html: '',
-          _type: module
-        },
-        (Redact.modules[module].defaults || {})),
-        renderPartlyReactiveContent
+        collection,
+        Redact.normalizeElement(collection, {
+          container,
+          document: currentDoc._id,
+          index: 0,
+          value: _.extend({
+              _html: '',
+              _type: module
+            },
+            (Redact.modules[module].defaults || {})
+          ),
+        })
       )
+        .then(renderPartlyReactiveContent)
+        .catch((e) => console.error(e))
     },
   })
 })
