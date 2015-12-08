@@ -38,12 +38,7 @@ Template.redactEditor.onRendered(renderPartlyReactiveContent)
 Template.redactEditor.events({
   'focus [contenteditable=true]': function lockElementOnFocus (e) {
     Redact.lockElement(collection, getElement(e))
-      .then( function () {
-        debugger;
-      })
-      .catch(function (err) {
-        Redact.notify(err.message)
-      })
+      .catch((err) => Redact.notify(err.message))
   },
 
   'keyup [contenteditable=true]': keyFilter(function updateElementOnKeyup (e) {
@@ -124,7 +119,8 @@ function renderPartlyReactiveContent () {
     let field = elem.getAttribute('data-field')
     // TODO: Fix this memory leak (autorun is never stopped, but created multiple times)
     Tracker.autorun(() => {
-      let lock = Redact.deepObjKey(field + '._lock', collection.findOne(currentDoc._id))
+      let doc = collection.findOne(currentDoc._id)
+      let lock = (doc[field][Redact.findByAttr('_id', elem.id, doc[field])] || {})._lock
       if((lock && lock._user === Redact.getUserId()) || !lock) {
         elem.contentEditable = 'true'
       } else {
